@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOMBARDIER</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">✈ ✈</span>
+      <h1>BOMBARDIER<span class="brand-sub">// DUEL AÉRIEN</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+  <main class="board">
+    <section class="hud hud-left" id="hud-p1">
+      <div class="hud-name">AVION ROUGE</div>
+      <div class="bar-track"><div class="bar-fill hp" id="hp-p1" style="width:100%"></div></div>
+      <div class="hud-row"><span>TRANCHÉE</span><b id="trench-p1">100%</b></div>
+    </section>
+    <div class="canvas-wrap">
+      <canvas id="game" width="980" height="500"></canvas>
+      <div class="turn-banner" id="turn-banner">AU TOUR DE <span id="turn-name" style="color:var(--p1)">ROUGE</span></div>
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">ROUGE GAGNE</h2>
+          <p id="overlay-sub">Tranchée adverse détruite !</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>BOMBARDIER</h2>
+          <p class="rules">
+            <b>Avion rouge (J1)</b> — Q/D : se déplacer · Espace : larguer une bombe<br>
+            <b>Avion bleu (J2)</b> — ←/→ : se déplacer · Entrée : larguer une bombe<br><br>
+            Volez au-dessus du camp adverse. Détruisez la tranchée ennemie avant la vôtre.
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+    <section class="hud hud-right" id="hud-p2">
+      <div class="hud-name">AVION BLEU</div>
+      <div class="bar-track"><div class="bar-fill hp" id="hp-p2" style="width:100%"></div></div>
+      <div class="hud-row"><span>TRANCHÉE</span><b id="trench-p2">100%</b></div>
+    </section>
+  </main>
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 — Q/D, Espace</span>
+    <span class="legend-item p2-color">■ J2 — ←/→, Entrée</span>
+    <span class="legend-item">Volez au-dessus du camp adverse · les bombes tombent à la verticale</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='bomber.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>
