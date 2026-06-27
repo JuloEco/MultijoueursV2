@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CODE BREAKER</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+<style>
+  .cb-layout {
+    display: grid;
+    grid-template-columns: 1fr 220px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .cb-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 14px;
+  }
+  .cb-panel-title {
+    font-size: 11px; letter-spacing: 2px; font-weight: 700;
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cb-panel-title.p1 { color: var(--p1); }
+  .cb-panel-title.p2 { color: var(--p2); }
+  .cb-center {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 14px;
+    text-align: center;
+  }
+  .color-picker {
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 10px 0;
+  }
+  .color-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid transparent; cursor: pointer;
+    transition: transform 0.1s, border-color 0.1s;
+  }
+  .color-dot:hover  { transform: scale(1.15); }
+  .color-dot.sel    { border-color: #fff; transform: scale(1.2); }
+  .guess-row {
+    display: flex; gap: 5px; align-items: center; margin-bottom: 5px;
+  }
+  .guess-peg {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #0a0c08; border: 1px solid #3a4530;
+  }
+  .hint-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-left: 6px;
+  }
+  .hint-peg {
+    width: 10px; height: 10px; border-radius: 50%; background: #232a1c;
+  }
+  .hint-peg.black { background: #d8d6c8; }
+  .hint-peg.white { background: #5c7330; }
+  .submit-btn {
+    font-family: var(--mono); background: var(--phosphor); color: var(--bg);
+    border: none; padding: 6px 14px; font-size: 11px; letter-spacing: 2px;
+    font-weight: 700; cursor: pointer; margin-top: 8px; width: 100%;
+  }
+  .submit-btn:disabled { background: #3a4530; color: #5c7330; cursor: not-allowed; }
+  .current-guess {
+    display: flex; gap: 6px; justify-content: center; margin: 10px 0;
+  }
+  .cur-peg {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #0a0c08; border: 2px dashed #3a4530;
+    cursor: pointer;
+  }
+  .attempts-label {
+    font-size: 10px; color: var(--phosphor-dim); letter-spacing: 1px; margin-top: 6px;
+  }
+  .won-badge {
+    font-size: 12px; letter-spacing: 2px; font-weight: 700;
+    padding: 6px 12px; border: 1px solid; margin-top: 8px; display: none;
+  }
+</style>
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">? ? ? ?</span>
+      <h1>CODE BREAKER<span class="brand-sub">// MASTERMIND DUEL</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+
+  <div class="cb-layout" id="game-area" style="display:none;">
+
+    <!-- Panneau J1 -->
+    <div class="cb-panel" id="panel-p1">
+      <div class="cb-panel-title p1">J1 ROUGE — DÉCHIFFREZ LE CODE</div>
+      <canvas id="board-p1" width="260" height="370"></canvas>
+      <div class="current-guess" id="cur-p1">
+        <div class="cur-peg" id="cp1-0" data-pi="0"></div>
+        <div class="cur-peg" id="cp1-1" data-pi="1"></div>
+        <div class="cur-peg" id="cp1-2" data-pi="2"></div>
+        <div class="cur-peg" id="cp1-3" data-pi="3"></div>
+      </div>
+      <div class="color-picker" id="picker-p1"></div>
+      <button class="submit-btn" id="submit-p1">SOUMETTRE</button>
+      <div class="attempts-label">Tentatives : <b id="att-p1">0</b> / 10</div>
+      <div class="won-badge" id="badge-p1" style="color:var(--p1);border-color:var(--p1)">✓ CODE TROUVÉ</div>
+    </div>
+
+    <!-- Centre — codes secrets -->
+    <div class="cb-center">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--phosphor-dim);margin-bottom:12px;">CODES SECRETS</div>
+      <div style="font-size:10px;color:var(--phosphor-dim);margin-bottom:6px;">CODE DE J2 ↓<br><span style="font-size:9px;">(visible par J1 une fois trouvé)</span></div>
+      <canvas id="secret-p2" width="100" height="36"></canvas>
+      <div style="height:20px;"></div>
+      <div style="font-size:10px;color:var(--phosphor-dim);margin-bottom:6px;">CODE DE J1 ↓<br><span style="font-size:9px;">(visible par J2 une fois trouvé)</span></div>
+      <canvas id="secret-p1" width="100" height="36"></canvas>
+      <div style="margin-top:20px;font-size:10px;color:var(--phosphor-dim);line-height:1.8;">
+        <b style="color:#d8d6c8">■ Noir</b> = bonne couleur + bonne place<br>
+        <b style="color:#5c7330">■ Vert</b> = bonne couleur, mauvaise place
+      </div>
+      <div id="round-status" style="margin-top:16px;font-size:11px;color:var(--phosphor);letter-spacing:1px;"></div>
+    </div>
+
+    <!-- Panneau J2 -->
+    <div class="cb-panel" id="panel-p2">
+      <div class="cb-panel-title p2">J2 BLEU — DÉCHIFFREZ LE CODE</div>
+      <canvas id="board-p2" width="260" height="370"></canvas>
+      <div class="current-guess" id="cur-p2">
+        <div class="cur-peg" id="cp2-0" data-pi="0"></div>
+        <div class="cur-peg" id="cp2-1" data-pi="1"></div>
+        <div class="cur-peg" id="cp2-2" data-pi="2"></div>
+        <div class="cur-peg" id="cp2-3" data-pi="3"></div>
+      </div>
+      <div class="color-picker" id="picker-p2"></div>
+      <button class="submit-btn" id="submit-p2">SOUMETTRE</button>
+      <div class="attempts-label">Tentatives : <b id="att-p2">0</b> / 10</div>
+      <div class="won-badge" id="badge-p2" style="color:var(--p2);border-color:var(--p2)">✓ CODE TROUVÉ</div>
+    </div>
+
+  </div>
+
+  <!-- Overlay setup -->
+  <div class="overlay" id="overlay-setup">
+    <div class="overlay-card" style="max-width:520px;">
+      <h2 id="setup-title">J1 ROUGE — CHOISISSEZ VOTRE CODE</h2>
+      <p style="font-size:11px;color:var(--phosphor-dim);margin-bottom:14px;">
+        Choisissez 4 couleurs (répétitions autorisées). L'adversaire ne voit pas votre écran.
+      </p>
+      <div class="current-guess" id="setup-guess">
+        <div class="cur-peg" id="sg-0"></div>
+        <div class="cur-peg" id="sg-1"></div>
+        <div class="cur-peg" id="sg-2"></div>
+        <div class="cur-peg" id="sg-3"></div>
+      </div>
+      <div class="color-picker" id="setup-picker"></div>
+      <button class="submit-btn" id="setup-confirm" style="margin-top:14px;">VALIDER MON CODE →</button>
+    </div>
+  </div>
+
+  <!-- Overlay fin de manche -->
+  <div class="overlay" id="overlay-end" hidden>
+    <div class="overlay-card">
+      <h2 id="end-title">J1 ROUGE GAGNE</h2>
+      <p id="end-sub">Code trouvé en moins de tentatives !</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
+        <button id="btn-restart" class="btn-primary">REJOUER</button>
+        <a href="/" class="btn-secondary">← MENU</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay start -->
+  <div class="overlay" id="overlay-start">
+    <div class="overlay-card">
+      <h2>CODE BREAKER</h2>
+      <p class="rules">
+        Chaque joueur choisit un code secret de 4 couleurs.<br>
+        Puis vous essayez de deviner le code adverse en simultané.<br><br>
+        Après chaque tentative vous recevez des indices :<br>
+        <b style="color:#d8d6c8">■ Noir</b> = bonne couleur à la bonne place<br>
+        <b style="color:#5c7330">■ Vert</b> = bonne couleur mais mauvaise place<br><br>
+        Maximum 10 tentatives. Moins vous en utilisez, mieux c'est !<br>
+        Celui qui trouve en le moins de coups gagne la manche.
+      </p>
+      <button id="btn-start" class="btn-primary">COMMENCER</button>
+    </div>
+  </div>
+
+  <footer class="legend" style="margin-top:14px;">
+    <span class="legend-item p1-color">■ J1 — panneau gauche</span>
+    <span class="legend-item p2-color">■ J2 — panneau droit</span>
+    <span class="legend-item">Jeu simultané · 10 tentatives max · moins = mieux</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='codebreaker.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

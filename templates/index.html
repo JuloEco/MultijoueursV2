@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCADE // Duel Station</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+<style>
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 28px 0 24px;
+  }
+  @media (max-width: 700px) { .game-grid { grid-template-columns: 1fr; } }
+
+  .section-label {
+    font-size: 10px; letter-spacing: 3px; color: var(--phosphor-dim);
+    border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 16px;
+  }
+
+  .game-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 20px 16px 16px;
+    text-align: center;
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(143,179,63,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .game-card:hover { border-color: var(--phosphor); background: #1e241a; }
+
+  .game-icon { font-size: 28px; letter-spacing: -2px; }
+  .game-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--phosphor); }
+  .game-desc { font-size: 10.5px; color: var(--phosphor-dim); line-height: 1.65; }
+  .game-tag { font-size: 9px; letter-spacing: 1.5px; color: var(--phosphor-dim);
+    border: 1px solid var(--line-soft); display: inline-block; padding: 2px 6px; }
+
+  .game-scores {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-size: 10px;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 10px;
+  }
+  .game-scores .s { color: var(--paper); font-weight: 700; font-size: 16px; display: block; }
+  .game-scores .lbl { color: var(--phosphor-dim); font-size: 9px; }
+  .game-scores .vsep { color: var(--line); font-size: 9px; letter-spacing: 1px; align-self: center; }
+
+  .play-btn {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--phosphor-dim);
+    color: var(--phosphor);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    padding: 6px 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .play-btn:hover { background: var(--phosphor); color: var(--bg); border-color: var(--phosphor); }
+
+  .total-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 10px 18px; margin-bottom: 22px; font-size: 11px;
+  }
+  .total-bar .tot-score { font-size: 20px; font-weight: 700; }
+  .tot-p1 { color: var(--p1); }
+  .tot-p2 { color: var(--p2); }
+  .tot-label { color: var(--phosphor-dim); font-size: 10px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="scope">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◢◤</span>
+      <h1>ARCADE<span class="brand-sub">// DUEL STATION · 15 JEUX</span></h1>
+    </div>
+    <div style="font-size:11px; color:var(--phosphor-dim); letter-spacing:1px;">2 JOUEURS · LOCAL</div>
+  </header>
+
+  <!-- Tableau des scores globaux -->
+  <div class="total-bar">
+    <div>
+      <div class="tot-label">SCORE GLOBAL J1</div>
+      <div class="tot-score tot-p1" id="global-p1">0</div>
+    </div>
+    <div style="color:var(--line); font-size:11px; letter-spacing:2px;">TOTAL VICTOIRES</div>
+    <div>
+      <div class="tot-label">SCORE GLOBAL J2</div>
+      <div class="tot-score tot-p2" id="global-p2">0</div>
+    </div>
+  </div>
+
+  <!-- ARCADE -->
+  <div class="section-label">▸ ARCADE</div>
+  <div class="game-grid">
+    <div class="game-card">
+      <div class="game-icon">◢ ◣</div>
+      <div class="game-name">TANKS</div>
+      <div class="game-desc">Artillerie tour par tour.<br>Visez, chargez, tirez.</div>
+      <div class="game-tag">TOUR PAR TOUR · VENT</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="tanks-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="tanks-p2">0</span></div>
+      </div>
+      <a href="/tanks" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">▐ ▌</div>
+      <div class="game-name">PONG</div>
+      <div class="game-desc">Raquettes face à face.<br>Premier à 7 points.</div>
+      <div class="game-tag">TEMPS RÉEL · VITESSE</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="pong-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="pong-p2">0</span></div>
+      </div>
+      <a href="/pong" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">≋ ≋</div>
+      <div class="game-name">SNAKE DUEL</div>
+      <div class="game-desc">Deux serpents, une arène.<br>Forcez le crash.</div>
+      <div class="game-tag">TEMPS RÉEL · GRILLE</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="snake-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="snake-p2">0</span></div>
+      </div>
+      <a href="/snake" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">✈ ✈</div>
+      <div class="game-name">BOMBARDIER</div>
+      <div class="game-desc">Deux avions, deux tranchées.<br>Larguez les bombes en premier.</div>
+      <div class="game-tag">TEMPS RÉEL · BOMBES</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="bomber-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="bomber-p2">0</span></div>
+      </div>
+      <a href="/bomber" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">⊟ ⊟</div>
+      <div class="game-name">BREAKOUT DUEL</div>
+      <div class="game-desc">Chacun sa moitié de briques.<br>Videz votre camp en premier.</div>
+      <div class="game-tag">TEMPS RÉEL · BRIQUES</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="breakout-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="breakout-p2">0</span></div>
+      </div>
+      <a href="/breakout" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">⟵ ⟶</div>
+      <div class="game-name">TIR À LA CORDE</div>
+      <div class="game-desc">Mashing frénétique de touches.<br>Tirez la ligne dans votre camp.</div>
+      <div class="game-tag">MASHING · RÉFLEXES</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="tug-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="tug-p2">0</span></div>
+      </div>
+      <a href="/tug" class="play-btn">JOUER →</a>
+    </div>
+  </div>
+
+  <!-- STRATÉGIE -->
+  <div class="section-label" style="margin-top:24px;">▸ STRATÉGIE</div>
+  <div class="game-grid">
+    <div class="game-card">
+      <div class="game-icon">⬡ ⬡</div>
+      <div class="game-name">PUISSANCE 4</div>
+      <div class="game-desc">Grille 7×6, alignez 4 jetons.<br>Classique indémodable.</div>
+      <div class="game-tag">TOUR PAR TOUR · GRILLE</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="connect4-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="connect4-p2">0</span></div>
+      </div>
+      <a href="/connect4" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">⊕ ⊕</div>
+      <div class="game-name">GOMOKU</div>
+      <div class="game-desc">Grille 15×15, alignez 5.<br>Bloquez et attaquez.</div>
+      <div class="game-tag">TOUR PAR TOUR · STRATÉGIE</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="gomoku-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="gomoku-p2">0</span></div>
+      </div>
+      <a href="/gomoku" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">◎ ◎</div>
+      <div class="game-name">DUEL DE FLÉCHETTES</div>
+      <div class="game-desc">Visez la cible en mouvement.<br>501 points, décompte alterné.</div>
+      <div class="game-tag">TOUR PAR TOUR · PRÉCISION</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="darts-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="darts-p2">0</span></div>
+      </div>
+      <a href="/darts" class="play-btn">JOUER →</a>
+    </div>
+  </div>
+
+  <!-- NOUVEAUX JEUX -->
+  <div class="section-label" style="margin-top:24px;">▸ EN COURS DE DÉVELOPPEMENT</div>
+  <div class="game-grid">
+
+    <div class="game-card">
+      <div class="game-icon">💨 💨</div>
+      <div class="game-name">MORTAR DUEL</div>
+      <div class="game-desc">Tir indirect à l'aveugle.<br>La fumée révèle le terrain ennemi.</div>
+      <div class="game-tag">TOUR PAR TOUR · BROUILLARD</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="mortar-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="mortar-p2">0</span></div>
+      </div>
+      <a href="/mortar" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">◉ ◉</div>
+      <div class="game-name">RADAR PING</div>
+      <div class="game-desc">Deux sous-marins dans le noir.<br>Sonar → distance · Torpille → case exacte.</div>
+      <div class="game-tag">TOUR PAR TOUR · SONAR</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="radar-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="radar-p2">0</span></div>
+      </div>
+      <a href="/radar" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">▶▶ ▶▶</div>
+      <div class="game-name">TRENCH RUN</div>
+      <div class="game-desc">Course d'obstacles en scrolling.<br>Deux couloirs côte à côte, survivez le plus longtemps.</div>
+      <div class="game-tag">TEMPS RÉEL · SURVIE</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="trench-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="trench-p2">0</span></div>
+      </div>
+      <a href="/trench" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">✱ ✱</div>
+      <div class="game-name">MINESWEEPER DUEL</div>
+      <div class="game-desc">Même grille, chacun démine sa moitié.<br>Le premier à sauter sur une mine perd.</div>
+      <div class="game-tag">SIMULTANÉ · MINES</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="minesweeper-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="minesweeper-p2">0</span></div>
+      </div>
+      <a href="/minesweeper" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">▼ ▼</div>
+      <div class="game-name">SUPPLY DROP</div>
+      <div class="game-desc">Des caisses tombent du ciel.<br>Normale +1 · Dorée +3 · Piège −2 · Streak bonus.</div>
+      <div class="game-tag">TEMPS RÉEL · COLLECTE · 60s</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="supply-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="supply-p2">0</span></div>
+      </div>
+      <a href="/supply" class="play-btn">JOUER →</a>
+    </div>
+
+    <div class="game-card">
+      <div class="game-icon">? ? ? ?</div>
+      <div class="game-name">CODE BREAKER</div>
+      <div class="game-desc">Mastermind en duel simultané.<br>Devinez le code adverse en moins de tentatives.</div>
+      <div class="game-tag">SIMULTANÉ · LOGIQUE · 10 ESSAIS</div>
+      <div class="game-scores">
+        <div><span class="lbl">J1</span><span class="s" id="codebreaker-p1">0</span></div>
+        <div class="vsep">VICTOIRES</div>
+        <div><span class="lbl">J2</span><span class="s" id="codebreaker-p2">0</span></div>
+      </div>
+      <a href="/codebreaker" class="play-btn">JOUER →</a>
+    </div>
+
+  </div>
+
+  <footer class="legend" style="border-top:1px solid var(--line); padding-top:14px; margin-top:8px;">
+    <span class="legend-item">13 jeux disponibles · 2 en développement · scores conservés pendant la session</span>
+  </footer>
+
+</div>
+<script>
+const GAME_IDS = {
+  tanks:       ['tanks-p1','tanks-p2'],
+  pong:        ['pong-p1','pong-p2'],
+  snake:       ['snake-p1','snake-p2'],
+  connect4:    ['connect4-p1','connect4-p2'],
+  tug:         ['tug-p1','tug-p2'],
+  gomoku:      ['gomoku-p1','gomoku-p2'],
+  bomber:      ['bomber-p1','bomber-p2'],
+  darts:       ['darts-p1','darts-p2'],
+  breakout:    ['breakout-p1','breakout-p2'],
+  mortar:      ['mortar-p1','mortar-p2'],
+  radar:       ['radar-p1','radar-p2'],
+  trench:      ['trench-p1','trench-p2'],
+  minesweeper: ['minesweeper-p1','minesweeper-p2'],
+};
+async function loadAll() {
+  let gp1 = 0, gp2 = 0;
+  for (const [g, [id1, id2]] of Object.entries(GAME_IDS)) {
+    try {
+      const r = await fetch(`/api/scores/${g}`);
+      if (!r.ok) continue;
+      const d = await r.json();
+      const s1 = parseInt(d.player1) || 0;
+      const s2 = parseInt(d.player2) || 0;
+      document.getElementById(id1).textContent = s1;
+      document.getElementById(id2).textContent = s2;
+      gp1 += s1; gp2 += s2;
+    } catch(e) {}
+  }
+  document.getElementById('global-p1').textContent = gp1;
+  document.getElementById('global-p2').textContent = gp2;
+}
+loadAll();
+</script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

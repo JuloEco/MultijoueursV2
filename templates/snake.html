@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNAKE DUEL // Arène</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">≋ ≋</span>
+      <h1>SNAKE DUEL<span class="brand-sub">// ARÈNE</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1">
+        <span class="score-label">J1</span>
+        <span class="score-value" id="score-p1">0</span>
+      </div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2">
+        <span class="score-value" id="score-p2">0</span>
+        <span class="score-label">J2</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="board" style="grid-template-columns: 130px 1fr 130px;">
+    <section class="hud hud-left" id="hud-p1">
+      <div class="hud-name">SERPENT ROUGE</div>
+      <div class="hud-row" style="margin-top:8px;">
+        <span>LONGUEUR</span>
+        <b id="len-p1" style="font-size:24px;color:var(--p1);">3</b>
+      </div>
+    </section>
+
+    <div class="canvas-wrap">
+      <canvas id="game" width="980" height="540"></canvas>
+
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">SERPENT ROUGE GAGNE</h2>
+          <p id="overlay-sub">L'adversaire a percuté un mur</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>PRÊTS AU COMBAT ?</h2>
+          <p class="rules">
+            <b>Serpent rouge (J1)</b> — Z / Q / S / D (ou W / A / S / D)<br>
+            <b>Serpent bleu (J2)</b> — ↑ / ← / ↓ / →<br><br>
+            Mangez les pommes pour grandir.<br>
+            L'autre serpent <b>perd</b> s'il touche un mur, son propre corps ou le vôtre.
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="hud hud-right" id="hud-p2">
+      <div class="hud-name">SERPENT BLEU</div>
+      <div class="hud-row" style="margin-top:8px;">
+        <span>LONGUEUR</span>
+        <b id="len-p2" style="font-size:24px;color:var(--p2);">3</b>
+      </div>
+    </section>
+  </main>
+
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 — Z Q S D</span>
+    <span class="legend-item p2-color">■ J2 — ↑ ← ↓ →</span>
+    <span class="legend-item">Mangez les pommes · évitez les murs et les corps</span>
+  </footer>
+
+</div>
+<script src="{{ url_for('static', filename='snake.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

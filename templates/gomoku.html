@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOMOKU</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">⊕ ⊕</span>
+      <h1>GOMOKU<span class="brand-sub">// ALIGNER 5</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+  <main style="display:flex;gap:20px;align-items:flex-start;">
+    <section class="hud hud-left" id="hud-p1" style="min-width:120px;">
+      <div class="hud-name">J1 ROUGE</div>
+      <div class="hud-row" style="margin-top:8px;"><span>PIERRES</span><b id="stones-p1" style="color:var(--p1);font-size:22px;">0</b></div>
+    </section>
+    <div class="canvas-wrap" style="flex:1;">
+      <canvas id="game" width="620" height="620"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">J1 GAGNE</h2>
+          <p id="overlay-sub">5 pierres alignées !</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>GOMOKU</h2>
+          <p class="rules">Grille 15×15. <b>Cliquez</b> pour placer une pierre.<br>Alignez 5 pierres en ligne, colonne ou diagonale.<br><br><b>J1 (rouge)</b> commence.</p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+    <section class="hud hud-right" id="hud-p2" style="min-width:120px;">
+      <div class="hud-name">J2 BLEU</div>
+      <div class="hud-row" style="margin-top:8px;"><span>PIERRES</span><b id="stones-p2" style="color:var(--p2);font-size:22px;">0</b></div>
+    </section>
+  </main>
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 Rouge — clic souris</span>
+    <span class="legend-item p2-color">■ J2 Bleu — clic souris (assis en face ou même souris)</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='gomoku.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

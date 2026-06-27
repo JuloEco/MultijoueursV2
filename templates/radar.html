@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RADAR PING</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+<style>
+  .phase-bar {
+    position: absolute;
+    top: 10px; left: 50%; transform: translateX(-50%);
+    background: rgba(17,20,15,0.92);
+    border: 1px solid var(--line);
+    padding: 6px 18px;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--phosphor-dim);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .phase-bar b { color: var(--phosphor); }
+</style>
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">◉ ◉</span>
+      <h1>RADAR PING<span class="brand-sub">// DUEL SOUS-MARIN</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+
+  <main style="display:flex;gap:16px;align-items:flex-start;">
+
+    <section class="hud hud-left" id="hud-p1" style="min-width:140px;">
+      <div class="hud-name">SOUS-MARIN ROUGE</div>
+      <div class="hud-row" style="margin-top:10px;">
+        <span>TORPILLES</span>
+        <b id="torps-p1" style="color:var(--p1);font-size:22px;">3</b>
+      </div>
+      <div class="hud-row" style="margin-top:8px;">
+        <span>PINGS</span>
+        <b id="pings-p1" style="color:var(--phosphor);font-size:18px;">∞</b>
+      </div>
+      <div id="action-hint-p1" style="margin-top:14px;font-size:10px;color:var(--phosphor-dim);line-height:1.9;">
+        <b style="color:var(--paper)">Clic</b> : placer / ping / torpille
+      </div>
+    </section>
+
+    <div class="canvas-wrap" style="flex:1;">
+      <canvas id="game" width="840" height="560"></canvas>
+
+      <div class="phase-bar" id="phase-bar">
+        PHASE : <b id="phase-label">PLACEMENT</b>
+      </div>
+
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">J1 GAGNE</h2>
+          <p id="overlay-sub">Sous-marin ennemi coulé !</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>RADAR PING</h2>
+          <p class="rules">
+            Grille 10×10 partagée — chaque moitié est invisible à l'adversaire.<br><br>
+            <b>1. Placement</b> — Chaque joueur clique pour poser son sous-marin (en secret).<br>
+            <b>2. Sonar</b> — À tour de rôle : cliquez sur la grille ennemie pour envoyer un <b>ping</b>.<br>
+            Un anneau révèle la distance approximative. 2 pings max par tour.<br>
+            <b>3. Torpille</b> — Après vos pings, cliquez <b>TORPILLE</b> pour tirer sur une case.<br><br>
+            3 torpilles chacun. Coulez le sous-marin adverse pour gagner !
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="hud hud-right" id="hud-p2" style="min-width:140px;">
+      <div class="hud-name">SOUS-MARIN BLEU</div>
+      <div class="hud-row" style="margin-top:10px;">
+        <span>TORPILLES</span>
+        <b id="torps-p2" style="color:var(--p2);font-size:22px;">3</b>
+      </div>
+      <div class="hud-row" style="margin-top:8px;">
+        <span>PINGS</span>
+        <b id="pings-p2" style="color:var(--phosphor);font-size:18px;">∞</b>
+      </div>
+      <div id="action-hint-p2" style="margin-top:14px;font-size:10px;color:var(--phosphor-dim);line-height:1.9;">
+        <b style="color:var(--paper)">Clic</b> : placer / ping / torpille
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 Rouge — grille gauche</span>
+    <span class="legend-item p2-color">■ J2 Bleu — grille droite</span>
+    <span class="legend-item">Ping → anneau de distance · Torpille → case exacte · 3 torpilles chacun</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='radar.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

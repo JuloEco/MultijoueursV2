@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TANKS // Duel d'artillerie</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">◢◤</span>
+      <h1>TANKS<span class="brand-sub">// DUEL D'ARTILLERIE</span></h1>
+    </div>
+
+    <div class="scoreboard" id="scoreboard">
+      <div class="score-cell p1">
+        <span class="score-label">J1</span>
+        <span class="score-value" id="score-p1">0</span>
+      </div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2">
+        <span class="score-value" id="score-p2">0</span>
+        <span class="score-label">J2</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="board">
+    <section class="hud hud-left" id="hud-p1">
+      <div class="hud-name">TANK ROUGE</div>
+      <div class="bar-track"><div class="bar-fill hp" id="hp-p1" style="width:100%"></div></div>
+      <div class="hud-row">
+        <span>ANGLE <b id="angle-p1">45°</b></span>
+        <span>PUISSANCE <b id="power-p1">0%</b></span>
+      </div>
+    </section>
+
+    <div class="canvas-wrap">
+      <canvas id="game" width="980" height="540"></canvas>
+      <div class="turn-banner" id="turn-banner">AU TOUR DE <span id="turn-name">TANK ROUGE</span></div>
+      <div class="wind-gauge" id="wind-gauge">
+        <span class="wind-label">VENT</span>
+        <span class="wind-arrow" id="wind-arrow">→</span>
+        <span class="wind-value" id="wind-value">0</span>
+      </div>
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">TANK ROUGE GAGNE</h2>
+          <p id="overlay-sub">Manche terminée</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER UNE MANCHE</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>PRÊTS AU COMBAT ?</h2>
+          <p class="rules">
+            <b>Tank rouge (J1)</b> — Q / D : déplacer · Z / S : viser · Espace : charger / tirer<br>
+            <span class="rules-azerty">(Q D Z S, ou A D W S en QWERTY)</span><br><br>
+            <b>Tank bleu (J2)</b> — ← / → : déplacer · ↑ / ↓ : viser · Entrée : charger / tirer
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="hud hud-right" id="hud-p2">
+      <div class="hud-name">TANK BLEU</div>
+      <div class="bar-track"><div class="bar-fill hp" id="hp-p2" style="width:100%"></div></div>
+      <div class="hud-row">
+        <span>ANGLE <b id="angle-p2">135°</b></span>
+        <span>PUISSANCE <b id="power-p2">0%</b></span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 — Q/D, Z/S, Espace</span>
+    <span class="legend-item p2-color">■ J2 — ←/→, ↑/↓, Entrée</span>
+    <span class="legend-item">Maintenir la touche de tir charge la puissance, relâcher tire l'obus</span>
+  </footer>
+
+</div>
+<script src="{{ url_for('static', filename='tanks.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

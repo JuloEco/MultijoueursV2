@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUPPLY DROP</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">▼ ▼</span>
+      <h1>SUPPLY DROP<span class="brand-sub">// COLLECTE DE CAISSES</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+
+  <main class="board">
+    <section class="hud hud-left" id="hud-p1">
+      <div class="hud-name">J1 ROUGE</div>
+      <div class="hud-row" style="margin-top:10px;">
+        <span>CAISSES</span>
+        <b id="score-val-p1" style="color:var(--p1);font-size:28px;">0</b>
+      </div>
+      <div class="hud-row" style="margin-top:8px;">
+        <span>TEMPS</span>
+        <b id="timer" style="color:var(--phosphor);font-size:18px;">60s</b>
+      </div>
+      <div style="margin-top:14px;font-size:10px;color:var(--phosphor-dim);line-height:2;">
+        <b style="color:var(--paper)">Q / D</b> déplacer
+      </div>
+    </section>
+
+    <div class="canvas-wrap">
+      <canvas id="game" width="980" height="520"></canvas>
+
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">J1 GAGNE</h2>
+          <p id="overlay-sub">Plus de caisses collectées !</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>SUPPLY DROP</h2>
+          <p class="rules">
+            Des caisses de ravitaillement tombent du ciel — certaines valent plus que d'autres !<br><br>
+            <b>J1 (rouge)</b> — Q / D pour déplacer votre zone de collecte<br>
+            <b>J2 (bleu)</b> — ← / → pour déplacer votre zone de collecte<br><br>
+            <b>Caisse normale</b> ■ = 1 point &nbsp;·&nbsp;
+            <b style="color:#f2a640">Caisse dorée</b> ★ = 3 points &nbsp;·&nbsp;
+            <b style="color:#e05020">Caisse piège</b> ✕ = −2 points<br><br>
+            60 secondes. Le plus de points gagne la manche !
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="hud hud-right" id="hud-p2">
+      <div class="hud-name">J2 BLEU</div>
+      <div class="hud-row" style="margin-top:10px;">
+        <span>CAISSES</span>
+        <b id="score-val-p2" style="color:var(--p2);font-size:28px;">0</b>
+      </div>
+      <div class="hud-row" style="margin-top:8px;">
+        <span>STREAK</span>
+        <b id="streak-p2" style="color:var(--phosphor);font-size:18px;">×1</b>
+      </div>
+      <div style="margin-top:14px;font-size:10px;color:var(--phosphor-dim);line-height:2;">
+        <b style="color:var(--paper)">← / →</b> déplacer
+      </div>
+    </section>
+  </main>
+
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 — Q / D</span>
+    <span class="legend-item p2-color">■ J2 — ← / →</span>
+    <span class="legend-item">Normale +1 · Dorée +3 · Piège −2 · Streak × bonus · 60 secondes</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='supply.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MORTAR DUEL</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">💨 💨</span>
+      <h1>MORTAR DUEL<span class="brand-sub">// TIR INDIRECT</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+
+  <main class="board">
+    <section class="hud hud-left" id="hud-p1">
+      <div class="hud-name">MORTIER ROUGE</div>
+      <div class="bar-track"><div class="bar-fill" id="hp-bar-p1" style="width:100%;background:var(--p1)"></div></div>
+      <div class="hud-row">
+        <span>VIE <b id="hp-p1" style="color:var(--p1)">3</b></span>
+        <span>ANGLE <b id="angle-p1">—</b></span>
+        <span>FORCE <b id="power-p1">—</b></span>
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--phosphor-dim);line-height:1.8">
+        <b style="color:var(--paper)">Z/S</b> angle<br>
+        <b style="color:var(--paper)">Q/D</b> force<br>
+        <b style="color:var(--paper)">Espace</b> feu !
+      </div>
+    </section>
+
+    <div class="canvas-wrap">
+      <canvas id="game" width="980" height="540"></canvas>
+
+      <div class="turn-banner" id="turn-banner">
+        AU TOUR DE <span id="turn-name">MORTIER ROUGE</span>
+      </div>
+
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">ROUGE GAGNE</h2>
+          <p id="overlay-sub">Adversaire détruit !</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>MORTAR DUEL</h2>
+          <p class="rules">
+            Chaque joueur voit <b>son camp</b> mais pas celui de l'adversaire.<br>
+            Les impacts laissent de la <b>fumée</b> qui révèle le terrain peu à peu.<br><br>
+            <b>J1 (rouge)</b> — Z/S : angle · Q/D : force · Espace : tirer<br>
+            <b>J2 (bleu)</b> — ↑/↓ : angle · ←/→ : force · Entrée : tirer<br><br>
+            3 vies chacun. Touchez l'adversaire pour lui retirer une vie.
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="hud hud-right" id="hud-p2">
+      <div class="hud-name">MORTIER BLEU</div>
+      <div class="bar-track"><div class="bar-fill" id="hp-bar-p2" style="width:100%;background:var(--p2)"></div></div>
+      <div class="hud-row">
+        <span>VIE <b id="hp-p2" style="color:var(--p2)">3</b></span>
+        <span>ANGLE <b id="angle-p2">—</b></span>
+        <span>FORCE <b id="power-p2">—</b></span>
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--phosphor-dim);line-height:1.8">
+        <b style="color:var(--paper)">↑/↓</b> angle<br>
+        <b style="color:var(--paper)">←/→</b> force<br>
+        <b style="color:var(--paper)">Entrée</b> feu !
+      </div>
+    </section>
+  </main>
+
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 — Z/S angle · Q/D force · Espace</span>
+    <span class="legend-item p2-color">■ J2 — ↑/↓ angle · ←/→ force · Entrée</span>
+    <span class="legend-item">La fumée révèle le terrain · 3 vies · visez à l'aveugle !</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='mortar.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>

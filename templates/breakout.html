@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BREAKOUT DUEL</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='mobile.css') }}">
+</head>
+<body>
+<div class="scope">
+  <header class="topbar">
+    <div class="brand">
+      <a href="/" class="back-link">◂ ARCADE</a>
+      <span class="brand-mark" style="margin-left:14px">⊟ ⊟</span>
+      <h1>BREAKOUT DUEL<span class="brand-sub">// BRIQUES</span></h1>
+    </div>
+    <div class="scoreboard">
+      <div class="score-cell p1"><span class="score-label">J1</span><span class="score-value" id="score-p1">0</span></div>
+      <span class="score-sep">VICTOIRES</span>
+      <div class="score-cell p2"><span class="score-value" id="score-p2">0</span><span class="score-label">J2</span></div>
+    </div>
+  </header>
+  <main class="board">
+    <section class="hud hud-left" id="hud-p1">
+      <div class="hud-name">J1 ROUGE</div>
+      <div class="hud-row" style="margin-top:8px;"><span>BRIQUES</span><b id="bricks-p1" style="color:var(--p1);font-size:22px;">—</b></div>
+    </section>
+    <div class="canvas-wrap">
+      <canvas id="game" width="980" height="560"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h2 id="overlay-title">J1 GAGNE</h2>
+          <p id="overlay-sub">Toutes les briques cassées !</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button id="btn-restart" class="btn-primary">REJOUER</button>
+            <a href="/" class="btn-secondary">← MENU</a>
+          </div>
+        </div>
+      </div>
+      <div class="overlay" id="overlay-start">
+        <div class="overlay-card">
+          <h2>BREAKOUT DUEL</h2>
+          <p class="rules">
+            <b>J1 (rouge)</b> — Q / D pour déplacer la raquette (côté gauche)<br>
+            <b>J2 (bleu)</b> — ← / → pour déplacer la raquette (côté droit)<br><br>
+            Deux terrains séparés. Cassez toutes vos briques en premier.<br>
+            La balle rebondit entre les murs et votre raquette. Ne la laissez pas passer !
+          </p>
+          <button id="btn-start" class="btn-primary">COMMENCER</button>
+        </div>
+      </div>
+    </div>
+    <section class="hud hud-right" id="hud-p2">
+      <div class="hud-name">J2 BLEU</div>
+      <div class="hud-row" style="margin-top:8px;"><span>BRIQUES</span><b id="bricks-p2" style="color:var(--p2);font-size:22px;">—</b></div>
+    </section>
+  </main>
+  <footer class="legend">
+    <span class="legend-item p1-color">■ J1 — Q / D (raquette gauche)</span>
+    <span class="legend-item p2-color">■ J2 — ← / → (raquette droite)</span>
+    <span class="legend-item">Cassez toutes vos briques en premier · ne lâchez pas la balle</span>
+  </footer>
+</div>
+<script src="{{ url_for('static', filename='breakout.js') }}"></script>
+<script src="{{ url_for('static', filename='touch.js') }}"></script>
+</body>
+</html>
