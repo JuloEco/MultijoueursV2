@@ -1,0 +1,273 @@
+/* ============================================================
+   MOBILE — styles adaptatifs pour tous les jeux
+   Chargé en complément de style.css sur mobile (< 768px)
+   ============================================================ */
+
+/* ── Forcer le viewport et empêcher le zoom tactile ── */
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── Bannière "tourne ton téléphone" ── */
+#rotate-banner {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: var(--mono);
+  text-align: center;
+  padding: 24px;
+}
+#rotate-banner .rotate-icon {
+  font-size: 48px;
+  animation: spin-hint 2s ease-in-out infinite;
+}
+#rotate-banner p {
+  font-size: 13px;
+  color: var(--phosphor-dim);
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+@keyframes spin-hint {
+  0%,100% { transform: rotate(0deg);  }
+  40%      { transform: rotate(90deg); }
+  60%      { transform: rotate(90deg); }
+}
+
+/* Affiche la bannière uniquement en portrait sur mobile */
+@media (max-width: 768px) and (orientation: portrait) {
+  #rotate-banner { display: flex; }
+}
+
+/* ── Layout mobile paysage ── */
+@media (max-width: 900px) and (orientation: landscape) {
+
+  body {
+    padding: 4px 6px;
+    align-items: flex-start;
+  }
+
+  .scope { max-width: 100vw; }
+
+  /* Topbar compacte */
+  .topbar {
+    padding: 0 4px 6px;
+    margin-bottom: 8px;
+  }
+  .brand h1    { font-size: 14px; letter-spacing: 1px; }
+  .brand-sub   { display: none; }
+  .brand-mark  { font-size: 13px; }
+  .back-link   { font-size: 10px; padding: 3px 6px; }
+  .score-value { font-size: 15px; }
+  .score-sep   { display: none; }
+  .score-label { font-size: 9px; }
+
+  /* Canvas pleine largeur */
+  #game {
+    width: 100%;
+    height: auto;
+    max-height: 52vh;
+    object-fit: contain;
+  }
+
+  /* Board : HUD miniaturisés sur les côtés */
+  .board {
+    grid-template-columns: 70px 1fr 70px;
+    gap: 5px;
+  }
+
+  .hud {
+    padding: 6px;
+    font-size: 9px;
+  }
+  .hud-name   { font-size: 9px; letter-spacing: 1px; margin-bottom: 4px; }
+  .hud-row    { font-size: 9px; gap: 3px; }
+  .hud-row b  { font-size: 10px; }
+  .bar-track  { height: 5px; margin-bottom: 5px; }
+
+  /* Légende masquée */
+  .legend { display: none; }
+
+  /* Overlay cards plus compactes */
+  .overlay-card {
+    padding: 16px 18px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .overlay-card h2 { font-size: 15px; margin-bottom: 8px; }
+  .overlay-card p  { font-size: 11px; margin-bottom: 12px; }
+  .btn-primary, .btn-secondary { padding: 8px 14px; font-size: 11px; }
+
+  /* Turn banner */
+  .turn-banner { font-size: 9px; padding: 3px 8px; top: 5px; }
+
+  /* Wind gauge */
+  .wind-gauge { font-size: 9px; padding: 3px 6px; top: 5px; right: 5px; }
+}
+
+/* ── Contrôles tactiles overlay ── */
+#touch-controls {
+  display: none;
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  #touch-controls {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 36vh;
+    z-index: 100;
+    pointer-events: none; /* les enfants activent eux-mêmes */
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+/* Zone de geste joueur */
+.touch-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 12px;
+  gap: 8px;
+  pointer-events: all;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-zone-inner {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Bouton d'action générique */
+.t-btn {
+  background: rgba(143,179,63,0.12);
+  border: 1px solid rgba(143,179,63,0.35);
+  border-radius: 50%;
+  color: var(--phosphor);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.08s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.t-btn:active, .t-btn.pressed {
+  background: rgba(143,179,63,0.3);
+}
+
+/* Tailles des boutons */
+.t-btn-sm  { width: 42px; height: 42px; font-size: 16px; }
+.t-btn-md  { width: 54px; height: 54px; font-size: 20px; }
+.t-btn-lg  { width: 70px; height: 70px; font-size: 22px; border-radius: 12px; }
+.t-btn-xl  { width: 84px; height: 84px; font-size: 26px; border-radius: 14px; }
+
+/* Couleurs joueur */
+.t-btn.p1 { border-color: rgba(214,84,60,0.5);  color: var(--p1); background: rgba(214,84,60,0.1);  }
+.t-btn.p2 { border-color: rgba(79,143,174,0.5); color: var(--p2); background: rgba(79,143,174,0.08); }
+.t-btn.p1:active, .t-btn.p1.pressed { background: rgba(214,84,60,0.28);  }
+.t-btn.p2:active, .t-btn.p2.pressed { background: rgba(79,143,174,0.25); }
+
+/* D-pad directionnel */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 40px);
+  grid-template-rows:    repeat(3, 40px);
+  gap: 3px;
+}
+.dpad .t-btn { border-radius: 6px; width: 40px; height: 40px; font-size: 17px; }
+.dpad .dpad-center { background: transparent; border-color: transparent; pointer-events: none; }
+
+/* Séparateur central */
+.touch-divider {
+  width: 1px;
+  height: 80%;
+  align-self: center;
+  background: rgba(58,69,48,0.6);
+  flex-shrink: 0;
+}
+
+/* Label de zone */
+.touch-zone-label {
+  font-size: 9px;
+  color: var(--phosphor-dim);
+  letter-spacing: 1.5px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ── Tap-zone pleine largeur (Tug, Darts) ── */
+.tap-zone-full {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  border-top: 1px solid rgba(58,69,48,0.4);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.tap-zone-full span {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--phosphor-dim);
+  pointer-events: none;
+}
+
+/* ── Swipe zone (Snake, Trench) ── */
+.swipe-zone {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  border-top: 1px solid rgba(58,69,48,0.4);
+  font-size: 22px;
+  color: var(--phosphor-dim);
+  -webkit-tap-highlight-color: transparent;
+}
+.swipe-zone span {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--phosphor-dim);
+  margin-top: 4px;
+}
+
+/* ── Indicateur de geste (flash visuel) ── */
+.gesture-flash {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  background: rgba(143,179,63,0.25);
+  transform: scale(0);
+  transition: transform 0.15s ease-out, opacity 0.25s ease-out;
+  z-index: 200;
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  margin-top: -30px;
+}
+.gesture-flash.active {
+  transform: scale(1.5);
+  opacity: 0;
+}

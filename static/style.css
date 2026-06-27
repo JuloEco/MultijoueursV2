@@ -1,0 +1,281 @@
+@font-face {
+  font-family: 'sys-mono';
+  src: local('Consolas'), local('Menlo'), local('Monaco');
+}
+
+:root{
+  --bg: #11140f;
+  --surface: #171c14;
+  --line: #3a4530;
+  --line-soft: #232a1c;
+  --phosphor: #8fb33f;
+  --phosphor-dim: #5c7330;
+  --p1: #d6543c;
+  --p1-dim: #6b3326;
+  --p2: #4f8fae;
+  --p2-dim: #2c4956;
+  --paper: #d8d6c8;
+  --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, 'SF Mono', Consolas, Menlo, monospace;
+}
+
+*{ box-sizing: border-box; margin:0; padding:0; }
+
+body{
+  background: var(--bg);
+  color: var(--paper);
+  font-family: var(--mono);
+  min-height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 24px 12px;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(143,179,63,0.06), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+}
+
+.scope{
+  width: 100%;
+  max-width: 1080px;
+}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  padding: 0 4px 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+
+.brand{ display:flex; align-items:baseline; gap:10px; }
+.brand-mark{ color: var(--phosphor); font-size: 18px; letter-spacing:-2px; }
+.brand h1{
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--paper);
+}
+.brand-sub{
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--phosphor-dim);
+  letter-spacing: 3px;
+  margin-left: 8px;
+}
+
+.back-link{
+  font-size: 11px;
+  color: var(--phosphor-dim);
+  text-decoration: none;
+  letter-spacing: 1px;
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  transition: color 0.12s, border-color 0.12s;
+}
+.back-link:hover{ color: var(--phosphor); border-color: var(--phosphor); }
+
+.scoreboard{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.score-cell{ display:flex; align-items:center; gap:6px; }
+.score-value{
+  font-size: 20px;
+  font-weight:700;
+  min-width: 22px;
+  text-align:center;
+}
+.p1 .score-value{ color: var(--p1); }
+.p2 .score-value{ color: var(--p2); }
+.score-label{ color: var(--phosphor-dim); font-size: 11px; }
+.score-sep{ color: var(--line); font-size: 10px; letter-spacing: 2px; }
+
+/* ---------- Layout principal ---------- */
+.board{
+  display:grid;
+  grid-template-columns: 150px 1fr 150px;
+  gap: 14px;
+  align-items:start;
+}
+
+@media (max-width: 860px){
+  .board{ grid-template-columns: 1fr; }
+  .hud{ order:2; }
+  .canvas-wrap{ order:1; }
+}
+
+/* ---------- HUD joueurs ---------- */
+.hud{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 12px;
+}
+.hud-name{
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight:700;
+  margin-bottom: 8px;
+}
+.hud-left .hud-name{ color: var(--p1); }
+.hud-right .hud-name{ color: var(--p2); }
+
+.bar-track{
+  height: 8px;
+  background: var(--line-soft);
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  overflow:hidden;
+  margin-bottom: 10px;
+}
+.bar-fill{
+  height:100%;
+  width:100%;
+  transition: width 0.25s ease;
+}
+.hud-left .bar-fill{ background: var(--p1); }
+.hud-right .bar-fill{ background: var(--p2); }
+
+.hud-row{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--phosphor-dim);
+  letter-spacing: 0.5px;
+}
+.hud-row b{ color: var(--paper); font-size:12px; display:block; margin-top:1px; }
+
+/* ---------- Zone de jeu ---------- */
+.canvas-wrap{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  line-height: 0;
+}
+
+#game{
+  display:block;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+}
+
+.turn-banner{
+  position:absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17,20,15,0.85);
+  border: 1px solid var(--line);
+  padding: 5px 14px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--phosphor-dim);
+  pointer-events:none;
+}
+.turn-banner span{ color: var(--phosphor); font-weight:700; }
+
+.wind-gauge{
+  position:absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(17,20,15,0.85);
+  border: 1px solid var(--line);
+  padding: 5px 10px;
+  font-size: 11px;
+  display:flex;
+  align-items:center;
+  gap: 6px;
+  color: var(--phosphor-dim);
+  letter-spacing: 1px;
+  pointer-events:none;
+}
+.wind-arrow{ color: var(--phosphor); font-size: 14px; display:inline-block; }
+.wind-value{ color: var(--paper); }
+
+/* ---------- Overlays ---------- */
+.overlay{
+  position:absolute;
+  inset:0;
+  background: rgba(10,12,8,0.88);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.overlay[hidden]{ display:none; }
+
+.overlay-card{
+  text-align:center;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 28px 36px;
+  max-width: 440px;
+}
+.overlay-card h2{
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--phosphor);
+  margin-bottom: 10px;
+}
+.overlay-card p{
+  font-size: 12px;
+  color: var(--phosphor-dim);
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+.overlay-card .rules b{ color: var(--paper); }
+.rules-azerty{ font-size: 10.5px; opacity:0.7; }
+
+.btn-primary{
+  font-family: var(--mono);
+  background: var(--phosphor);
+  color: var(--bg);
+  border: none;
+  padding: 10px 20px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor:pointer;
+  transition: transform 0.1s ease, background 0.15s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-primary:hover{ background:#a3c656; }
+.btn-primary:active{ transform: scale(0.97); }
+
+.btn-secondary{
+  font-family: var(--mono);
+  background: transparent;
+  color: var(--phosphor-dim);
+  border: 1px solid var(--line);
+  padding: 10px 20px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor:pointer;
+  transition: color 0.12s, border-color 0.12s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-secondary:hover{ color: var(--paper); border-color: var(--phosphor-dim); }
+
+/* ---------- Légende ---------- */
+.legend{
+  margin-top: 14px;
+  display:flex;
+  gap: 22px;
+  flex-wrap:wrap;
+  font-size: 10.5px;
+  color: var(--phosphor-dim);
+  letter-spacing: 0.5px;
+  padding: 0 4px;
+}
+.legend-item.p1-color{ color: var(--p1); }
+.legend-item.p2-color{ color: var(--p2); }
